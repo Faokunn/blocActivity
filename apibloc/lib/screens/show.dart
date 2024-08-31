@@ -36,8 +36,8 @@ class ShowRequest extends StatelessWidget {
                     Text("Enrolled: ${state.student.enrolled.toString()}"),
                     const SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
+                      onPressed: () async {
+                        final result = await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => updateRequest(
@@ -50,6 +50,10 @@ class ShowRequest extends StatelessWidget {
                             ),
                           ),
                         );
+                        if (result == true) {
+                          await Future.delayed(Duration(milliseconds: 300));
+                          context.read<StudentBloc>().add(showStudent(id));
+                        }
                       },
                       child: const Text("Update"),
                     ),

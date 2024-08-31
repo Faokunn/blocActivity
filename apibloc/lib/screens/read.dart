@@ -3,6 +3,7 @@ import 'package:apibloc/bloc/event.dart';
 import 'package:apibloc/bloc/state.dart';
 import 'package:apibloc/bloc/widgets/CustomCard.dart';
 import 'package:apibloc/screens/show.dart';
+import 'package:apibloc/screens/create.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -38,6 +39,8 @@ class readRequest extends StatelessWidget {
                     );
                     if (result == true) {
                       context.read<StudentBloc>().add(getStudent());
+                    } else {
+                      context.read<StudentBloc>().add(getStudent());
                     }
                   },
                 );
@@ -47,6 +50,23 @@ class readRequest extends StatelessWidget {
             return const Center(child: Text('No students available'));
           }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => createRequest(),
+            ),
+          );
+          if (result == true) {
+            context.read<StudentBloc>().add(getStudent());
+          } else {
+            context.read<StudentBloc>().add(getStudent());
+          }
+        },
+        child: const Icon(Icons.add),
+        tooltip: 'Create Request',
       ),
     );
   }

@@ -25,3 +25,7 @@ class specificStudentLoaded extends state {
 
   specificStudentLoaded(this.student);
 }
+
+class studentUpdated extends state {}
+
+class studentCreated extends state {}

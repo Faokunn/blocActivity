@@ -10,6 +10,8 @@ class StudentBloc extends Bloc<event, state> {
     on<getStudent>(fetchStudentData);
     on<deleteStudent>(deleteStudentData);
     on<showStudent>(showStudentData);
+    on<updateStudent>(updateStudentData);
+    on<createStudent>(createStudentData);
   }
 
   Future<void> deleteStudentData(
@@ -50,6 +52,7 @@ class StudentBloc extends Bloc<event, state> {
   }
 
   Future<void> showStudentData(showStudent event, Emitter<state> emit) async {
+    emit(studentLoading());
     try {
       final response = await http.get(
         Uri.parse('http://127.0.0.1:8000/api/students/${event.id}'),
@@ -62,6 +65,68 @@ class StudentBloc extends Bloc<event, state> {
         emit(specificStudentLoaded(student));
       } else {
         emit(studentError('Failed to load student'));
+      }
+    } catch (e) {
+      emit(studentError(e.toString()));
+    }
+  }
+
+  Future<void> updateStudentData(
+      updateStudent event, Emitter<state> emit) async {
+    try {
+      final response = await http.put(
+        Uri.parse('http://127.0.0.1:8000/api/students/${event.id}'),
+        //Uri.parse('http://10.0.2.2:8000/api/students/${event.id}'),
+        // Uri.parse('http://localhost:8000/api/students/${event.id}'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({
+          'FirstName': event.firstName,
+          'LastName': event.lastName,
+          'Course': event.course,
+          'Year': event.year,
+          'Enrolled': event.enrolled,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        emit(studentUpdated());
+        await showStudentData(showStudent(event.id), emit);
+      } else {
+        emit(studentError('Failed to update student'));
+      }
+    } catch (e) {
+      emit(studentError(e.toString()));
+    }
+  }
+
+  Future<void> createStudentData(
+      createStudent event, Emitter<state> emit) async {
+    emit(studentLoading());
+
+    try {
+      final response = await http.post(
+        Uri.parse('http://127.0.0.1:8000/api/students'),
+        //Uri.parse('http://10.0.2.2:8000/api/students'),
+        //Uri.parse('http://localhost:8000/api/students'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'FirstName': event.firstName,
+          'LastName': event.lastName,
+          'Course': event.course,
+          'Year': event.year,
+          'Enrolled': event.enrolled,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        emit(studentUpdated());
+        add(getStudent());
+      } else {
+        emit(studentError('Failed to add student'));
       }
     } catch (e) {
       emit(studentError(e.toString()));
