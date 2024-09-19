@@ -51,8 +51,7 @@ class ShowRequest extends StatelessWidget {
                           ),
                         );
                         if (result == true) {
-                          await Future.delayed(Duration(milliseconds: 300));
-                          context.read<StudentBloc>().add(showStudent(id));
+                          Navigator.pop(context, true);
                         }
                       },
                       child: const Text("Update"),
