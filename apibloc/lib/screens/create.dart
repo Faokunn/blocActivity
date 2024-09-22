@@ -151,8 +151,7 @@ class _CreateRequestState extends State<createRequest> {
                   },
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    setState(() async {
+                  onPressed: () async {
                       if (validateFields()) {
                         context.read<StudentBloc>().add(createStudent(
                               firstNameController.text,
@@ -161,10 +160,9 @@ class _CreateRequestState extends State<createRequest> {
                               year!,
                               enrolled,
                             ));
-                        await Future.delayed(Duration(milliseconds: 300));
+                        await Future.delayed(const Duration(milliseconds: 300));
                         Navigator.pop(context, true);
                       }
-                    });
                   },
                   child: const Text('Submit'),
                 ),

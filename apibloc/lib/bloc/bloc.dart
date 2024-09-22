@@ -6,6 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 
 class StudentBloc extends Bloc<event, state> {
+  //final String baseUrl ='http://127.0.0.1:8000/api/students'; //WEB
+  final String baseUrl ='http://10.0.2.2:8000/api/students'; //ANDROID
+  //final String baseUrl ='http://localhost:8000/api/students';//IOS
   StudentBloc() : super(studentLoading()) {
     on<getStudent>(fetchStudentData);
     on<deleteStudent>(deleteStudentData);
@@ -18,7 +21,7 @@ class StudentBloc extends Bloc<event, state> {
       deleteStudent event, Emitter<state> emit) async {
     try {
       final response = await http.delete(
-        Uri.parse('http://127.0.0.1:8000/api/students/${event.id}'),
+        Uri.parse('$baseUrl/${event.id}'),
       );
 
       if (response.statusCode == 200) {
@@ -36,7 +39,7 @@ class StudentBloc extends Bloc<event, state> {
 
     try {
       final response =
-          await http.get(Uri.parse('http://127.0.0.1:8000/api/students'));
+          await http.get(Uri.parse(baseUrl));
 
       if (response.statusCode == 200) {
         List<dynamic> studentsJson = json.decode(response.body)['students'];
@@ -55,7 +58,7 @@ class StudentBloc extends Bloc<event, state> {
     emit(studentLoading());
     try {
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/api/students/${event.id}'),
+        Uri.parse('$baseUrl/${event.id}'),
       );
 
       if (response.statusCode == 200) {
@@ -75,9 +78,7 @@ class StudentBloc extends Bloc<event, state> {
       updateStudent event, Emitter<state> emit) async {
     try {
       final response = await http.put(
-        Uri.parse('http://127.0.0.1:8000/api/students/${event.id}'),
-        //Uri.parse('http://10.0.2.2:8000/api/students/${event.id}'),
-        // Uri.parse('http://localhost:8000/api/students/${event.id}'),
+        Uri.parse('$baseUrl/${event.id}'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -107,9 +108,7 @@ class StudentBloc extends Bloc<event, state> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/api/students'),
-        //Uri.parse('http://10.0.2.2:8000/api/students'),
-        //Uri.parse('http://localhost:8000/api/students'),
+        Uri.parse(baseUrl),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
